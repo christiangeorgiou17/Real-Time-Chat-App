@@ -42,3 +42,34 @@ class User(db.Model):
         return check_password_hash(self.password, password)
 
 
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.get_json()
+
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username and not password:
+        return jsonify({"msg": "Missing username and password"}), 400
+    if not username:
+        return jsonify({"msg": "Missing username"}), 400
+    if not password:
+        return jsonify({"msg": "Missing password"}), 400
+
+    if User.query.filter_by(username=username).first():
+        return jsonify({"msg": "Username already exists"}), 400
+
+    new_user = User(username=username)
+    new_user.set_password(password)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({"msg": "User registered successfully"}), 201
+
+
+
+def main():
+    app.run(debug=True)
+if __name__ == "__main__":
+    main()
