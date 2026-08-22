@@ -1,5 +1,6 @@
 from datetime import timedelta
 from os import getenv
+from os.path import abspath, join, dirname
 
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
@@ -12,7 +13,13 @@ app = Flask(__name__)
 CORS(app)
 
 load_dotenv()
-app.config["SQLALCHEMY_DATABASE_URI"] = getenv("SQLALCHEMY_DATABASE_URI")
+
+# Only for local database & testing
+
+BASE_DIR = abspath(dirname(__file__))
+DB_PATH = join(dirname(BASE_DIR), "chat.db")
+
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = getenv("JWT_SECRET_KEY")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
