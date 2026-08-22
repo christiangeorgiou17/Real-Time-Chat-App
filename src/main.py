@@ -68,6 +68,32 @@ def register():
     return jsonify({"msg": "User registered successfully"}), 201
 
 
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username and not password:
+        return jsonify({"msg": "Missing username and password"}), 400
+    if not username:
+        return jsonify({"msg": "Missing username"}), 400
+    if not password:
+        return jsonify({"msg": "Missing password"}), 400
+
+    user = User.query.filter_by(username=username).first()
+
+    if not user:
+        return jsonify({"msg": "User does not exist"}), 401
+    elif not user.check_password(password):
+        return jsonify({"msg": "Password Incorrect"}), 401
+
+    access_token = create_access_token(identity=str(user.id))
+    return jsonify({"access_token": access_token}), 200
+
+    
+
 
 def main():
     app.run(debug=True)
