@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime, timezone
 from os import getenv
 from os.path import abspath, join, dirname
 
@@ -19,15 +19,20 @@ load_dotenv()
 BASE_DIR = abspath(dirname(__file__))
 DB_PATH = join(dirname(BASE_DIR), "chat.db")
 
+
+JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = getenv("JWT_SECRET_KEY")
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_ACCESS_TOKEN_EXPIRES
 
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
+
+LAST_CLEANUP_TIME = None
 
 # Database Models
 
@@ -46,7 +51,30 @@ class User(db.Model):
 class TokenBlockList(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(36))
-    created_at = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+
+
+
+
+
+def cleanup_expired_tokens():
+    global JWT_ACCESS_TOKEN_EXPIRES
+
+    cutoff_time = datetime.now(timezone.utc) - JWT_ACCESS_TOKEN_EXPIRES
+
+    try:
+
+        deleted_count = db.session.query(TokenBlockList).filter(
+            TokenBlockList.created_at < cutoff_time
+        ).delete()
+
+        db.session.commit()
+        if deleted_count > 0:
+            print(f"DATABASE CLEANUP: Removed {deleted_count} expired tokens.")
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"DATABASE CLEANUP: Failed - {e}")
 
 
 
@@ -122,7 +150,14 @@ def logout():
     return jsonify({"msg": "Access token revoked successfully. Logged out."}), 200
 
 
+@app.before_request
+def auto_prune_blocklist():
+    global LAST_CLEANUP_TIME
+    now = datetime.now(timezone.utc)
 
+    if LAST_CLEANUP_TIME is None or (now - LAST_CLEANUP_TIME) > timedelta(days=1):
+        cleanup_expired_tokens()
+        LAST_CLEANUP_TIME = now
 
 
 
