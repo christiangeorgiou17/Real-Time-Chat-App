@@ -5,7 +5,7 @@ from os.path import abspath, join, dirname
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -29,6 +29,7 @@ db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
 
+# Database Models
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,6 +41,16 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+
+class TokenBlockList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(36))
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+
+
+
+# API endpoints
 
 
 @app.route("/register", methods=["POST"])
@@ -92,7 +103,28 @@ def login():
     access_token = create_access_token(identity=str(user.id))
     return jsonify({"access_token": access_token}), 200
 
-    
+
+@jwt.token_in_blocklist_loader
+def check_if_token_revoked(_jwt_header, jwt_payload):
+    jti = jwt_payload["jti"]
+    token = TokenBlockList.query.filter_by(jti=jti).first()
+    return token is not None
+
+@app.route("/logout", methods=["POST"])
+@jwt_required()
+def logout():
+    jti = get_jwt()["jti"]
+
+    revoked_token = TokenBlockList(jti=jti)
+    db.session.add(revoked_token)
+    db.session.commit()
+
+    return jsonify({"msg": "Access token revoked successfully. Logged out."}), 200
+
+
+
+
+
 
 
 def main():
