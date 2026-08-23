@@ -8,7 +8,7 @@ This application uses **SQLite** for local development, managed entirely via **F
 Stores unique token identifiers to invalidate sessions upon logout.
 
 | Column Name | Data Type | Modifiers | Description |
-|
+| :--- | :--- | :--- | :--- |
 | `id` | Integer | Primary Key, Auto-Increment | Unique row identifier. |
 | `jti` | String(36) | Unique, Nullable=False, Index | The unique JWT identifier string. |
 | `created_at` | DateTime | Nullable=False, Default=Now | Timestamp of when the user logged out. |
