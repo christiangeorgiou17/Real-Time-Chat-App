@@ -81,7 +81,7 @@ def cleanup_expired_tokens():
 # API endpoints
 
 
-@app.route("/register", methods=["POST"])
+@app.route("/api/register", methods=["POST"])
 def register():
     data = request.get_json()
 
@@ -107,7 +107,7 @@ def register():
     return jsonify({"msg": "User registered successfully"}), 201
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/api/login", methods=["POST"])
 def login():
     data = request.get_json()
 
@@ -138,7 +138,7 @@ def check_if_token_revoked(_jwt_header, jwt_payload):
     token = TokenBlockList.query.filter_by(jti=jti).first()
     return token is not None
 
-@app.route("/logout", methods=["POST"])
+@app.route("/api/logout", methods=["POST"])
 @jwt_required()
 def logout():
     jti = get_jwt()["jti"]
