@@ -19,3 +19,12 @@ To prevent the SQLite database (`chat.db`) from bloating with thousends of old, 
 -- Conceptual cleanup query executed by SQLAlchemy
 DELETE FROM token_blocklist WHERE created_at < DATETIME('now', '-1 day');
 ```
+
+## Frontend Integration (Work in Progress)
+
+The frontend client communicates with the backend authentication endpoints via standard HTTP requests.
+
+### Client-Side Token Management
+* **Storage:** Successful login responses return a JWT access token, which the client stores securely (e.g., in memory or `localStorage`).
+* **Session Persistence:** The client attaches the stored token to the headers of all protected HTTP and WebSocket requests.
+* **Logout Action:** Clicking logout triggers the request to the backend invalidation endpoint, and the client clears the token from local storage.
