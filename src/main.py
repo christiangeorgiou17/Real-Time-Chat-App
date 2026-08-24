@@ -3,7 +3,7 @@ from os import getenv
 from os.path import abspath, join, dirname
 
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, url_for, render_template
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt
 from flask_sqlalchemy import SQLAlchemy
@@ -32,10 +32,22 @@ db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
 
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+
+
+
+
+
+
 LAST_CLEANUP_TIME = None
 
 # Database Models
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
