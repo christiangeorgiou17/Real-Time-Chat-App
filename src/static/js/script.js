@@ -56,5 +56,48 @@ function toggleAuthMode(e) {
         : `Already have an account? <a href="#" onclick="toggleAuthMode(event)">Login instead</a>`;
 }
 
+
+// Network Request Handler: Authentication
+async function handleAuth(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const errorEl = document.getElementById('auth-error');
+    
+    const endpoint = isLoginMode ? `${API_BASE}/login` : `${API_BASE}/register`;
+    
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) throw new Error(data.msg || 'Something went wrong');
+        
+        if (isLoginMode) {
+            // Store token data securely in local storage
+            localStorage.setItem('token', data.access_token);
+            localStorage.setItem('username', username);
+            state.token = data.access_token;
+            state.username = username;
+            state.currentView = 'chat';
+            render();
+        } else {
+            alert('Registration successful! Please login.');
+            isLoginMode = true;
+            render();
+        }
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    }
+}
+
+
+
+
 // Initial load
 document.addEventListener('DOMContentLoaded', render);
