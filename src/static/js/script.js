@@ -141,7 +141,7 @@ async function handleLogout() {
     }
 }
 
-
+function handleSendMessage(event) {}
 
 
 
