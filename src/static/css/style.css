@@ -85,3 +85,68 @@ button:hover {
     margin-top: 15px;
     font-size: 14px; 
 }
+
+
+/* Chat Container Views */
+.chat-container {
+    background: var(--surface);
+    height: 550px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-header {
+    background: var(--bg-main);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+.logout-btn {
+    width: auto;
+    padding: 6px 12px;
+    font-size: 12px;
+    background: #6c757d;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #fafafa;
+}
+
+.system-msg {
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.chat-input-area {
+    display: flex;
+    border-top: 1px solid var(--border);
+    padding: 10px;
+    background: var(--surface);
+}
+
+.chat-input-area input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-right: 8px;
+}
+.chat-input-area button {
+    width: auto;
+    padding: 0 20px;
+}
