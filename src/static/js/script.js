@@ -45,6 +45,31 @@ function renderAuthView() {
     `;
 }
 
+
+// HTML Component: Chat Workspace
+function renderChatView() {
+    return `
+        <div class="chat-container">
+            <header class="chat-header">
+                <h3>Logged in as: <span id="user-display">${state.username}</span></h3>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            </header>
+            
+            <div class="chat-messages" id="chat-messages">
+                <div class="system-msg">System: Welcome to the chat room!</div>
+            </div>
+            
+            <form class="chat-input-area" onsubmit="handleSendMessage(event)">
+                <input type="text" id="message-input" placeholder="Type a message..." required autocomplete="off">
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    `;
+}
+
+
+
+
 // Toggle logic between Login and Register
 let isLoginMode = true;
 function toggleAuthMode(e) {
