@@ -45,3 +45,16 @@ function renderAuthView() {
     `;
 }
 
+// Toggle logic between Login and Register
+let isLoginMode = true;
+function toggleAuthMode(e) {
+    e.preventDefault();
+    isLoginMode = !isLoginMode;
+    document.getElementById('submit-btn').innerText = isLoginMode ? 'Login' : 'Register';
+    document.querySelector('.toggle-text').innerHTML = isLoginMode 
+        ? `Don't have an account? <a href="#" onclick="toggleAuthMode(event)">Register instead</a>`
+        : `Already have an account? <a href="#" onclick="toggleAuthMode(event)">Login instead</a>`;
+}
+
+// Initial load
+document.addEventListener('DOMContentLoaded', render);
