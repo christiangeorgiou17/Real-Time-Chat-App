@@ -97,6 +97,28 @@ async function handleAuth(event) {
 }
 
 
+// Network Request Handler: Logout
+async function handleLogout() {
+    try {
+        await fetch(`${API_BASE}/logout`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${state.token}` }
+        });
+    } catch (err) {
+        console.error('Logout error on server:', err);
+    } finally {
+        // Always clear local client storage even if token blocklist network fails
+        localStorage.clear();
+        state.token = null;
+        state.username = null;
+        state.currentView = 'auth';
+        render();
+    }
+}
+
+
+
+
 
 
 // Initial load
