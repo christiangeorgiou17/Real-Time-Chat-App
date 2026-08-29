@@ -67,6 +67,10 @@ class TokenBlockList(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
 
+class ChatRoom(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    is_group = db.Column(db.Boolean, default=False, nullable=False)
+    name = db.Column(db.String(100), nullable=True)
 
 
 class Message(db.Model):
@@ -77,6 +81,11 @@ class Message(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     # User shortcut
     user = db.relationship("User", backref=db.backref("messages", lazy=True))
+
+    room_id = db.Column(db.Integer, db.ForeignKey("chat_room.id"), nullable=False)
+    # Room shortcut
+    room = db.relationship("ChatRoom", backref=db.backref("messages", lazy=True))
+
 
 
 
