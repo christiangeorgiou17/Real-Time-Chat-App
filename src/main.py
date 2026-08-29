@@ -5,8 +5,8 @@ from os.path import abspath, join, dirname
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, url_for, render_template
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt
-from flask_socketio import SocketIO, emit
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt, decode_token
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -195,6 +195,31 @@ def auto_prune_blocklist():
     if LAST_CLEANUP_TIME is None or (now - LAST_CLEANUP_TIME) > timedelta(days=1):
         cleanup_expired_tokens()
         LAST_CLEANUP_TIME = now
+
+
+# Websocket Event Handlers
+
+@socketio.on("connect")
+def handle_connect(auth):
+
+    if auth:
+        token = auth.get("token")
+    else:
+        print("Connection refused: No token provided")
+        return False
+
+
+    try:
+        decoded_token = decode_token(token)
+        user_id = decoded_token["sub"]
+
+        join_room(f"user_{user_id}")
+        print(f"User {user_id} connected successfully and joined room user_{user_id}")
+
+    except Exception as e:
+        print(f"Connection refused: Invalid token. Error: {e}")
+        return False
+
 
 
 
