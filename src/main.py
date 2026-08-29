@@ -220,6 +220,9 @@ def handle_connect(auth):
         print(f"Connection refused: Invalid token. Error: {e}")
         return False
 
+@socketio.on("disconnect")
+def handle_disconnect():
+    print("A client has disconnected from the server.")
 
 
 
