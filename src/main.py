@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask, request, jsonify, url_for, render_template
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt
+from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -30,7 +31,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_ACCESS_TOKEN_EXPIRES
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
-
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 
@@ -175,6 +176,6 @@ def auto_prune_blocklist():
 
 
 def main():
-    app.run(debug=True)
+    socketio.run(app, debug=True)
 if __name__ == "__main__":
     main()
