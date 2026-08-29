@@ -67,13 +67,14 @@ class TokenBlockList(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
 
+
+
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("user_id"), nullable=False)
-
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     # User shortcut
     user = db.relationship("User", backref=db.backref("messages", lazy=True))
 
