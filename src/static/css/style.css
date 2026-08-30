@@ -21,7 +21,7 @@ body {
 
 #app {
     width: 100%;
-    max-width: 450px;
+    max-width: 900px;
     padding: 20px;
 }
 
@@ -31,6 +31,8 @@ body {
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .input-group {
@@ -80,73 +82,107 @@ button:hover {
 .hidden { 
     display: none; 
 }
+
 .toggle-text { 
     text-align: center;
     margin-top: 15px;
     font-size: 14px; 
 }
 
+/* Main menu container */
 
-/* Chat Container Views */
-.chat-container {
+.main-container {
     background: var(--surface);
-    height: 550px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    height: 600px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     display: flex;
-    flex-direction: column;
     overflow: hidden;
 }
 
-.chat-header {
-    background: var(--bg-main);
-    padding: 10px 15px;
+/* Left Sidebar Layout */
+.sidebar {
+    width: 30%;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background: #fcfcfc;
+    min-width: 250px;
+}
+
+.sidebar-header {
+    padding: 15px;
+    background: #f0f2f5;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--border);
 }
 
-.chat-header h3 {
-    margin: 0;
-    font-size: 16px;
-}
-.logout-btn {
-    width: auto;
-    padding: 6px 12px;
-    font-size: 12px;
-    background: #6c757d;
+.sidebar-header h4 { 
+    margin: 0; 
+    font-size: 14px; 
 }
 
-.chat-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    background: #fafafa;
+.logout-sm-btn { 
+    width: auto; 
+    padding: 6px 12px; 
+    font-size: 12px; 
+    background: #ea4335; 
 }
 
-.system-msg {
-    text-align: center;
-    color: #888;
-    font-size: 12px;
-    margin-bottom: 10px;
+.logout-sm-btn:hover {
+    background: #c53026;
 }
 
-.chat-input-area {
+.room-actions {
+    padding: 10px;
     display: flex;
-    border-top: 1px solid var(--border);
-    padding: 10px;
-    background: var(--surface);
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
 }
 
-.chat-input-area input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin-right: 8px;
+.room-actions button { 
+    padding: 8px; 
+    font-size: 12px; 
 }
-.chat-input-area button {
-    width: auto;
-    padding: 0 20px;
+
+.room-actions button.secondary { 
+    background: #6c757d; 
+}
+
+.room-actions button.secondary:hover { 
+    background: #5a6268; 
+}
+
+.rooms-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.no-chats { 
+    text-align: center; 
+    color: #888; 
+    font-size: 13px; 
+    margin-top: 30px; 
+}
+
+.chat-pane {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    background: #efeae2;
+}
+
+.welcome-hub {
+    margin: auto;
+    text-align: center;
+    max-width: 400px;
+    color: #666d71;
+    padding: 20px;
+}
+
+.welcome-hub h3 { 
+    margin-bottom: 8px; 
+    color: #414b50; 
 }
