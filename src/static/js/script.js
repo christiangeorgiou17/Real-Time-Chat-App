@@ -49,20 +49,33 @@ function renderAuthView() {
 // HTML Component: Chat Workspace
 function renderChatView() {
     return `
-        <div class="chat-container">
-            <header class="chat-header">
-                <h3>Logged in as: <span id="user-display">${state.username}</span></h3>
-                <button class="logout-btn" onclick="handleLogout()">Logout</button>
-            </header>
+        <div class="main-container">
+            <!-- Room Directory & Creation Menu Thing-->
+            <aside class="sidebar">
+                <header class="sidebar-header">
+                    <h4>👋 Welcome, ${state.username}</h4>
+                    <button class="logout-sm-btn" onclick="handleLogout()">Logout</button>
+                </header>
+                
+                <!-- Action Tools -->
+                <div class="room-actions">
+                    <button class="action-btn" onclick="openCreateRoomModal()">+ New Group</button>
+                    <button class="action-btn secondary" onclick="openStartContactModal()">💬 New Contact</button>
+                </div>
+                
+                <!-- Active Chats List -->
+                <div class="rooms-list" id="rooms-directory">
+                    <div class="no-chats">No active conversations</div>
+                </div>
+            </aside>
             
-            <div class="chat-messages" id="chat-messages">
-                <div class="system-msg">System: Welcome to the chat room!</div>
-            </div>
-            
-            <form class="chat-input-area" onsubmit="handleSendMessage(event)">
-                <input type="text" id="message-input" placeholder="Type a message..." required autocomplete="off">
-                <button type="submit">Send</button>
-            </form>
+            <!-- Alternates between Welcome Hub and Active Chat Screen -->
+            <main class="chat-pane" id="active-chat-pane">
+                <div class="welcome-hub">
+                    <h3>Scichat Web Style Chat</h3>
+                    <p>Select a chat room or start a new conversation from the menu to begin texting.</p>
+                </div>
+            </main>
         </div>
     `;
 }
@@ -143,6 +156,9 @@ async function handleLogout() {
 
 function handleSendMessage(event) {}
 
+function openCreateRoomModal() {}
+
+function openStartContactModal() {}
 
 
 
